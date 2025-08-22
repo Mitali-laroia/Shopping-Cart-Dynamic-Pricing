@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-public class HealthController {
+public final class HealthController {
 
     @GetMapping("/health")
     public Map<String, Object> health() {
