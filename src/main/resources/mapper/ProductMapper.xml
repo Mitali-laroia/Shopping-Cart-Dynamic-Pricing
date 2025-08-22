@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.shoppingcart.mapper.ProductMapper">
+
+    <resultMap id="ProductResultMap" type="com.example.shoppingcart.model.Product">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="category" column="category" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+        <result property="price" column="price"/>
+        <result property="description" column="description"/>
+        <result property="stockQuantity" column="stock_quantity"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="ProductResultMap">
+        SELECT * FROM shopping_cart.products ORDER BY id
+    </select>
+
+    <select id="findById" resultMap="ProductResultMap">
+        SELECT * FROM shopping_cart.products WHERE id = #{id}
+    </select>
+
+    <select id="findByCategory" resultMap="ProductResultMap">
+        SELECT * FROM shopping_cart.products WHERE category = #{category} ORDER BY id
+    </select>
+
+    <insert id="insert" parameterType="com.example.shoppingcart.model.Product" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO shopping_cart.products (name, category, price, description, stock_quantity, created_at, updated_at)
+        VALUES (#{name}, #{category}, #{price}, #{description}, #{stockQuantity}, #{createdAt}, #{updatedAt})
+    </insert>
+
+    <update id="update" parameterType="com.example.shoppingcart.model.Product">
+        UPDATE shopping_cart.products 
+        SET name = #{name}, category = #{category}, price = #{price}, 
+            description = #{description}, stock_quantity = #{stockQuantity}, updated_at = #{updatedAt}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateStock">
+        UPDATE shopping_cart.products 
+        SET stock_quantity = #{quantity}, updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM shopping_cart.products WHERE id = #{id}
+    </delete>
+
+</mapper>

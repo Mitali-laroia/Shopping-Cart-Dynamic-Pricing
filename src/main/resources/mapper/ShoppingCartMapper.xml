@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.shoppingcart.mapper.ShoppingCartMapper">
+
+    <resultMap id="ShoppingCartResultMap" type="com.example.shoppingcart.model.ShoppingCart">
+        <id property="id" column="id"/>
+        <result property="status" column="status"/>
+        <result property="totalAmount" column="total_amount"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <association property="customer" javaType="com.example.shoppingcart.model.Customer">
+            <id property="id" column="customer_id"/>
+            <result property="name" column="customer_name"/>
+            <result property="email" column="customer_email"/>
+            <result property="loyaltyLevel" column="customer_loyalty_level" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="ShoppingCartWithItemsResultMap" type="com.example.shoppingcart.model.ShoppingCart">
+        <id property="id" column="cart_id"/>
+        <result property="status" column="cart_status"/>
+        <result property="totalAmount" column="cart_total_amount"/>
+        <result property="createdAt" column="cart_created_at"/>
+        <result property="updatedAt" column="cart_updated_at"/>
+        <association property="customer" javaType="com.example.shoppingcart.model.Customer">
+            <id property="id" column="customer_id"/>
+            <result property="name" column="customer_name"/>
+            <result property="email" column="customer_email"/>
+            <result property="loyaltyLevel" column="customer_loyalty_level" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+        </association>
+        <collection property="items" ofType="com.example.shoppingcart.model.CartItem">
+            <id property="id" column="item_id"/>
+            <result property="quantity" column="item_quantity"/>
+            <result property="unitPrice" column="item_unit_price"/>
+            <result property="totalPrice" column="item_total_price"/>
+            <result property="createdAt" column="item_created_at"/>
+            <result property="updatedAt" column="item_updated_at"/>
+            <association property="product" javaType="com.example.shoppingcart.model.Product">
+                <id property="id" column="product_id"/>
+                <result property="name" column="product_name"/>
+                <result property="category" column="product_category" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+                <result property="price" column="product_price"/>
+                <result property="description" column="product_description"/>
+                <result property="stockQuantity" column="product_stock_quantity"/>
+            </association>
+        </collection>
+    </resultMap>
+
+    <select id="findAll" resultMap="ShoppingCartResultMap">
+        SELECT c.*, cu.name as customer_name, cu.email as customer_email, cu.loyalty_level as customer_loyalty_level
+        FROM shopping_cart.shopping_carts c
+        LEFT JOIN shopping_cart.customers cu ON c.customer_id = cu.id
+        ORDER BY c.id
+    </select>
+
+    <select id="findById" resultMap="ShoppingCartResultMap">
+        SELECT c.*, cu.name as customer_name, cu.email as customer_email, cu.loyalty_level as customer_loyalty_level
+        FROM shopping_cart.shopping_carts c
+        LEFT JOIN shopping_cart.customers cu ON c.customer_id = cu.id
+        WHERE c.id = #{id}
+    </select>
+
+    <select id="findByIdWithItems" resultMap="ShoppingCartWithItemsResultMap">
+        SELECT 
+            c.id as cart_id, c.status as cart_status, c.total_amount as cart_total_amount, 
+            c.created_at as cart_created_at, c.updated_at as cart_updated_at,
+            cu.id as customer_id, cu.name as customer_name, cu.email as customer_email, cu.loyalty_level as customer_loyalty_level,
+            ci.id as item_id, ci.quantity as item_quantity, ci.unit_price as item_unit_price, 
+            ci.total_price as item_total_price, ci.created_at as item_created_at, ci.updated_at as item_updated_at,
+            p.id as product_id, p.name as product_name, p.category as product_category, 
+            p.price as product_price, p.description as product_description, p.stock_quantity as product_stock_quantity
+        FROM shopping_cart.shopping_carts c
+        LEFT JOIN shopping_cart.customers cu ON c.customer_id = cu.id
+        LEFT JOIN shopping_cart.cart_items ci ON c.id = ci.cart_id
+        LEFT JOIN shopping_cart.products p ON ci.product_id = p.id
+        WHERE c.id = #{id}
+    </select>
+
+    <select id="findByCustomerId" resultMap="ShoppingCartResultMap">
+        SELECT c.*, cu.name as customer_name, cu.email as customer_email, cu.loyalty_level as customer_loyalty_level
+        FROM shopping_cart.shopping_carts c
+        LEFT JOIN shopping_cart.customers cu ON c.customer_id = cu.id
+        WHERE c.customer_id = #{customerId}
+        ORDER BY c.id
+    </select>
+
+    <select id="findByStatus" resultMap="ShoppingCartResultMap">
+        SELECT c.*, cu.name as customer_name, cu.email as customer_email, cu.loyalty_level as customer_loyalty_level
+        FROM shopping_cart.shopping_carts c
+        LEFT JOIN shopping_cart.customers cu ON c.customer_id = cu.id
+        WHERE c.status = #{status}
+        ORDER BY c.id
+    </select>
+
+    <insert id="insert" parameterType="com.example.shoppingcart.model.ShoppingCart" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO shopping_cart.shopping_carts (customer_id, status, total_amount, created_at, updated_at)
+        VALUES (#{customer.id}, #{status}, #{totalAmount}, #{createdAt}, #{updatedAt})
+    </insert>
+
+    <update id="update" parameterType="com.example.shoppingcart.model.ShoppingCart">
+        UPDATE shopping_cart.shopping_carts 
+        SET status = #{status}, total_amount = #{totalAmount}, updated_at = #{updatedAt}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM shopping_cart.shopping_carts WHERE id = #{id}
+    </delete>
+
+</mapper>

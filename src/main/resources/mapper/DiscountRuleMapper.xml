@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.shoppingcart.mapper.DiscountRuleMapper">
+
+    <resultMap id="DiscountRuleResultMap" type="com.example.shoppingcart.model.DiscountRule">
+        <id property="id" column="id"/>
+        <result property="ruleName" column="rule_name"/>
+        <result property="ruleType" column="rule_type"/>
+        <result property="category" column="category" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+        <result property="minQuantity" column="min_quantity"/>
+        <result property="minCartValue" column="min_cart_value"/>
+        <result property="loyaltyLevel" column="loyalty_level" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+        <result property="discountPercentage" column="discount_percentage"/>
+        <result property="isActive" column="is_active"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="DiscountRuleResultMap">
+        SELECT * FROM shopping_cart.discount_rules ORDER BY id
+    </select>
+
+    <select id="findById" resultMap="DiscountRuleResultMap">
+        SELECT * FROM shopping_cart.discount_rules WHERE id = #{id}
+    </select>
+
+    <select id="findActiveRules" resultMap="DiscountRuleResultMap">
+        SELECT * FROM shopping_cart.discount_rules WHERE is_active = true ORDER BY id
+    </select>
+
+    <select id="findByRuleType" resultMap="DiscountRuleResultMap">
+        SELECT * FROM shopping_cart.discount_rules WHERE rule_type = #{ruleType} AND is_active = true ORDER BY id
+    </select>
+
+    <select id="findByCategory" resultMap="DiscountRuleResultMap">
+        SELECT * FROM shopping_cart.discount_rules WHERE category = #{category} AND is_active = true ORDER BY id
+    </select>
+
+    <select id="findByLoyaltyLevel" resultMap="DiscountRuleResultMap">
+        SELECT * FROM shopping_cart.discount_rules WHERE loyalty_level = #{loyaltyLevel} AND is_active = true ORDER BY id
+    </select>
+
+    <insert id="insert" parameterType="com.example.shoppingcart.model.DiscountRule" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO shopping_cart.discount_rules (rule_name, rule_type, category, min_quantity, min_cart_value, 
+                                                   loyalty_level, discount_percentage, is_active, created_at)
+        VALUES (#{ruleName}, #{ruleType}, #{category}, #{minQuantity}, #{minCartValue}, 
+                #{loyaltyLevel}, #{discountPercentage}, #{isActive}, #{createdAt})
+    </insert>
+
+    <update id="update" parameterType="com.example.shoppingcart.model.DiscountRule">
+        UPDATE shopping_cart.discount_rules 
+        SET rule_name = #{ruleName}, rule_type = #{ruleType}, category = #{category}, 
+            min_quantity = #{minQuantity}, min_cart_value = #{minCartValue}, loyalty_level = #{loyaltyLevel},
+            discount_percentage = #{discountPercentage}, is_active = #{isActive}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM shopping_cart.discount_rules WHERE id = #{id}
+    </delete>
+
+</mapper>

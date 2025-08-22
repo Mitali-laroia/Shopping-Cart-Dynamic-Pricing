@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.shoppingcart.mapper.CartItemMapper">
+
+    <resultMap id="CartItemResultMap" type="com.example.shoppingcart.model.CartItem">
+        <id property="id" column="id"/>
+        <result property="quantity" column="quantity"/>
+        <result property="unitPrice" column="unit_price"/>
+        <result property="totalPrice" column="total_price"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <association property="shoppingCart" javaType="com.example.shoppingcart.model.ShoppingCart">
+            <id property="id" column="cart_id"/>
+        </association>
+        <association property="product" javaType="com.example.shoppingcart.model.Product">
+            <id property="id" column="product_id"/>
+            <result property="name" column="product_name"/>
+            <result property="category" column="product_category" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+            <result property="price" column="product_price"/>
+            <result property="description" column="product_description"/>
+            <result property="stockQuantity" column="product_stock_quantity"/>
+        </association>
+    </resultMap>
+
+    <select id="findAll" resultMap="CartItemResultMap">
+        SELECT ci.*, p.name as product_name, p.category as product_category, 
+               p.price as product_price, p.description as product_description, p.stock_quantity as product_stock_quantity
+        FROM shopping_cart.cart_items ci
+        LEFT JOIN shopping_cart.products p ON ci.product_id = p.id
+        ORDER BY ci.id
+    </select>
+
+    <select id="findById" resultMap="CartItemResultMap">
+        SELECT ci.*, p.name as product_name, p.category as product_category, 
+               p.price as product_price, p.description as product_description, p.stock_quantity as product_stock_quantity
+        FROM shopping_cart.cart_items ci
+        LEFT JOIN shopping_cart.products p ON ci.product_id = p.id
+        WHERE ci.id = #{id}
+    </select>
+
+    <select id="findByCartId" resultMap="CartItemResultMap">
+        SELECT ci.*, p.name as product_name, p.category as product_category, 
+               p.price as product_price, p.description as product_description, p.stock_quantity as product_stock_quantity
+        FROM shopping_cart.cart_items ci
+        LEFT JOIN shopping_cart.products p ON ci.product_id = p.id
+        WHERE ci.cart_id = #{cartId}
+        ORDER BY ci.id
+    </select>
+
+    <select id="findByCartIdAndProductId" resultMap="CartItemResultMap">
+        SELECT ci.*, p.name as product_name, p.category as product_category, 
+               p.price as product_price, p.description as product_description, p.stock_quantity as product_stock_quantity
+        FROM shopping_cart.cart_items ci
+        LEFT JOIN shopping_cart.products p ON ci.product_id = p.id
+        WHERE ci.cart_id = #{cartId} AND ci.product_id = #{productId}
+    </select>
+
+    <insert id="insert" parameterType="com.example.shoppingcart.model.CartItem" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO shopping_cart.cart_items (cart_id, product_id, quantity, unit_price, total_price, created_at, updated_at)
+        VALUES (#{shoppingCart.id}, #{product.id}, #{quantity}, #{unitPrice}, #{totalPrice}, #{createdAt}, #{updatedAt})
+    </insert>
+
+    <update id="update" parameterType="com.example.shoppingcart.model.CartItem">
+        UPDATE shopping_cart.cart_items 
+        SET quantity = #{quantity}, unit_price = #{unitPrice}, total_price = #{totalPrice}, updated_at = #{updatedAt}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM shopping_cart.cart_items WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteByCartId">
+        DELETE FROM shopping_cart.cart_items WHERE cart_id = #{cartId}
+    </delete>
+
+</mapper>
