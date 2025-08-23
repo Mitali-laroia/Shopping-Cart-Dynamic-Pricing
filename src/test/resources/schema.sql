@@ -1,3 +1,6 @@
+-- Drop existing tables and schema if they exist
+DROP SCHEMA IF EXISTS shopping_cart CASCADE;
+
 -- Create schema for H2 test database
 CREATE SCHEMA IF NOT EXISTS shopping_cart;
 
@@ -8,7 +11,7 @@ CREATE TABLE shopping_cart.customers (
     email VARCHAR(100) UNIQUE NOT NULL,
     loyalty_level VARCHAR(20) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Products table
@@ -20,7 +23,7 @@ CREATE TABLE shopping_cart.products (
     price DECIMAL(10,2) NOT NULL,
     stock_quantity INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Shopping carts table
@@ -30,7 +33,7 @@ CREATE TABLE shopping_cart.shopping_carts (
     status VARCHAR(20) DEFAULT 'ACTIVE',
     total_amount DECIMAL(10,2) DEFAULT 0.00,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (customer_id) REFERENCES shopping_cart.customers(id)
 );
 
@@ -43,7 +46,7 @@ CREATE TABLE shopping_cart.cart_items (
     unit_price DECIMAL(10,2) NOT NULL,
     total_price DECIMAL(10,2) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (cart_id) REFERENCES shopping_cart.shopping_carts(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES shopping_cart.products(id),
     UNIQUE(cart_id, product_id)

@@ -217,7 +217,7 @@ class ProductMapperTest extends BaseMapperTest {
             .filter(p -> p.getPrice().compareTo(new BigDecimal("500.00")) >= 0)
             .toList();
         
-        assertTrue(expensiveProducts.size() >= 3); // Laptop, Smartphone, Tablet
+        assertTrue(expensiveProducts.size() >= 2); // Laptop, Smartphone
         
         // Find affordable products (<= 100)
         List<Product> affordableProducts = allProducts.stream()

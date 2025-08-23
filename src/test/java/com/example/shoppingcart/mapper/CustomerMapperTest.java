@@ -124,20 +124,31 @@ class CustomerMapperTest extends BaseMapperTest {
 
     @Test
     void testDeleteById() {
+        // Insert a test customer that has no dependencies
+        Customer testCustomer = new Customer();
+        testCustomer.setName("Delete Test Customer");
+        testCustomer.setEmail("delete@example.com");
+        testCustomer.setLoyaltyLevel(LoyaltyLevel.BRONZE);
+        testCustomer.setCreatedAt(LocalDateTime.now());
+        testCustomer.setUpdatedAt(LocalDateTime.now());
+        
+        customerMapper.insert(testCustomer);
+        Long testId = testCustomer.getId();
+        
         // Verify customer exists
-        Customer customer = customerMapper.findById(4L);
+        Customer customer = customerMapper.findById(testId);
         assertNotNull(customer);
         
         // Delete the customer
-        customerMapper.deleteById(4L);
+        customerMapper.deleteById(testId);
         
         // Verify customer is deleted
-        Customer deletedCustomer = customerMapper.findById(4L);
+        Customer deletedCustomer = customerMapper.findById(testId);
         assertNull(deletedCustomer);
         
-        // Verify total count is reduced by checking findAll size
+        // Verify total count remains the same since we added and then deleted
         List<Customer> customers = customerMapper.findAll();
-        assertEquals(4, customers.size());
+        assertEquals(5, customers.size());
     }
 
     @Test

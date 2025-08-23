@@ -11,22 +11,22 @@ INSERT INTO shopping_cart.customers (id, name, email, loyalty_level, created_at,
 -- Insert test products
 INSERT INTO shopping_cart.products (id, name, description, category, price, stock_quantity, created_at, updated_at) VALUES
 -- Electronics
-(1, 'Laptop', 'High-performance laptop', 'Electronics', 1000.00, 50, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(2, 'Smartphone', 'Latest smartphone model', 'Electronics', 800.00, 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(3, 'Tablet', 'Portable tablet device', 'Electronics', 400.00, 75, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(4, 'Headphones', 'Wireless noise-canceling headphones', 'Electronics', 150.00, 200, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(1, 'Laptop', 'High-performance laptop', 'ELECTRONICS', 1000.00, 50, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(2, 'Smartphone', 'Latest smartphone model', 'ELECTRONICS', 800.00, 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(3, 'Tablet', 'Portable tablet device', 'ELECTRONICS', 400.00, 75, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(4, 'Headphones', 'Wireless noise-canceling headphones', 'ELECTRONICS', 150.00, 200, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
 -- Books
-(5, 'Java Programming', 'Complete guide to Java programming', 'Books', 45.99, 300, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(6, 'Spring Boot in Action', 'Learn Spring Boot framework', 'Books', 39.99, 250, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(7, 'Design Patterns', 'Software design patterns explained', 'Books', 55.00, 150, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(8, 'Clean Code', 'Writing maintainable code', 'Books', 42.50, 180, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(5, 'Java Programming', 'Complete guide to Java programming', 'BOOKS', 45.99, 300, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(6, 'Spring Boot in Action', 'Learn Spring Boot framework', 'BOOKS', 39.99, 250, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(7, 'Design Patterns', 'Software design patterns explained', 'BOOKS', 55.00, 150, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(8, 'Clean Code', 'Writing maintainable code', 'BOOKS', 42.50, 180, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
 -- Clothing
-(9, 'T-Shirt', 'Cotton casual t-shirt', 'Clothing', 25.00, 500, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(10, 'Jeans', 'Blue denim jeans', 'Clothing', 80.00, 200, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(11, 'Sweater', 'Warm wool sweater', 'Clothing', 60.00, 150, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(12, 'Shoes', 'Running shoes', 'Clothing', 120.00, 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+(9, 'T-Shirt', 'Cotton casual t-shirt', 'CLOTHING', 25.00, 500, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(10, 'Jeans', 'Blue denim jeans', 'CLOTHING', 80.00, 200, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(11, 'Sweater', 'Warm wool sweater', 'CLOTHING', 60.00, 150, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(12, 'Shoes', 'Running shoes', 'CLOTHING', 120.00, 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Insert test shopping carts
 INSERT INTO shopping_cart.shopping_carts (id, customer_id, status, total_amount, created_at, updated_at) VALUES

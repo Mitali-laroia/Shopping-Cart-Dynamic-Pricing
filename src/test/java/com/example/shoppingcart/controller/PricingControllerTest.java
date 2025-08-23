@@ -5,7 +5,6 @@ import com.example.shoppingcart.dto.CartCalculationRequest;
 import com.example.shoppingcart.dto.CartCalculationResponse;
 import com.example.shoppingcart.dto.CustomerRequest;
 import com.example.shoppingcart.dto.ProductRequest;
-import com.example.shoppingcart.model.Customer;
 import com.example.shoppingcart.model.LoyaltyLevel;
 import com.example.shoppingcart.model.ProductCategory;
 import com.example.shoppingcart.service.PricingService;
@@ -50,7 +49,6 @@ class PricingControllerTest {
 
     private CartCalculationRequest sampleRequest;
     private CartCalculationResponse sampleResponse;
-    private Customer sampleCustomer;
 
     @BeforeEach
     void setUp() {

@@ -1,6 +1,7 @@
 package com.example.shoppingcart.mapper;
 
 import com.example.shoppingcart.model.Customer;
+import com.example.shoppingcart.model.LoyaltyLevel;
 import com.example.shoppingcart.model.ShoppingCart;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ class ShoppingCartMapperTest extends BaseMapperTest {
         assertEquals("ACTIVE", cart.getStatus());
         assertNotNull(cart.getCustomer());
         assertEquals("Jane Smith", cart.getCustomer().getName());
-        assertEquals("SILVER", cart.getCustomer().getLoyaltyLevel());
+        assertEquals(LoyaltyLevel.SILVER, cart.getCustomer().getLoyaltyLevel());
         assertNotNull(cart.getCreatedAt());
         assertNotNull(cart.getUpdatedAt());
     }
@@ -129,7 +130,7 @@ class ShoppingCartMapperTest extends BaseMapperTest {
         ShoppingCart insertedCart = shoppingCartMapper.findById(newCart.getId());
         assertNotNull(insertedCart);
         assertEquals("ACTIVE", insertedCart.getStatus());
-        assertEquals(BigDecimal.ZERO, insertedCart.getTotalAmount());
+        assertEquals(0, insertedCart.getTotalAmount().compareTo(BigDecimal.ZERO));
         assertEquals(customer.getId(), insertedCart.getCustomer().getId());
     }
 
@@ -205,7 +206,7 @@ class ShoppingCartMapperTest extends BaseMapperTest {
         assertNotNull(cart.getCustomer());
         assertEquals("Jane Smith", cart.getCustomer().getName());
         assertEquals("jane.smith@example.com", cart.getCustomer().getEmail());
-        assertEquals("SILVER", cart.getCustomer().getLoyaltyLevel());
+        assertEquals(LoyaltyLevel.SILVER, cart.getCustomer().getLoyaltyLevel());
     }
 
     @Test
