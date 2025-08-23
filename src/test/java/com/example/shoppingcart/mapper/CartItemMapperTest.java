@@ -1,7 +1,6 @@
 package com.example.shoppingcart.mapper;
 
 import com.example.shoppingcart.model.CartItem;
-import com.example.shoppingcart.model.Customer;
 import com.example.shoppingcart.model.Product;
 import com.example.shoppingcart.model.ProductCategory;
 import com.example.shoppingcart.model.ShoppingCart;
@@ -27,9 +26,6 @@ class CartItemMapperTest extends BaseMapperTest {
 
     @Autowired
     private ProductMapper productMapper;
-
-    @Autowired
-    private CustomerMapper customerMapper;
 
     @Test
     void testFindAll() {
