@@ -1,8 +1,12 @@
 package com.example.shoppingcart.service;
 
 import com.example.shoppingcart.dto.AddItemRequest;
+import com.example.shoppingcart.dto.CartCalculationRequest;
+import com.example.shoppingcart.dto.CartCalculationResponse;
 import com.example.shoppingcart.dto.CartResponse;
 import com.example.shoppingcart.dto.CreateCartRequest;
+import com.example.shoppingcart.dto.CustomerRequest;
+import com.example.shoppingcart.dto.ProductRequest;
 import com.example.shoppingcart.mapper.CartItemMapper;
 import com.example.shoppingcart.mapper.CustomerMapper;
 import com.example.shoppingcart.mapper.ProductMapper;
@@ -20,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.ArrayList;
 
 @Service
 @Transactional
@@ -38,6 +43,9 @@ public class ShoppingCartService {
 
     @Autowired
     private ProductMapper productMapper;
+
+    @Autowired
+    private PricingService pricingService;
 
     public List<ShoppingCart> getAllCarts() {
         logger.debug("Fetching all shopping carts");
@@ -221,5 +229,41 @@ public class ShoppingCartService {
         shoppingCartMapper.update(cart);
         
         logger.debug("Updated cart total for cart: {} to: {}", cartId, total);
+    }
+
+    public CartCalculationResponse calculateCartPricing(Long cartId) {
+        logger.debug("Calculating pricing for cart: {}", cartId);
+        
+        ShoppingCart cart = shoppingCartMapper.findByIdWithItems(cartId);
+        if (cart == null) {
+            throw new RuntimeException("Shopping cart not found with id: " + cartId);
+        }
+        
+        if (cart.getItems() == null || cart.getItems().isEmpty()) {
+            throw new RuntimeException("Cart is empty, cannot calculate pricing");
+        }
+        
+        List<ProductRequest> productRequests = new ArrayList<>();
+        for (CartItem item : cart.getItems()) {
+            ProductRequest productRequest = new ProductRequest();
+            productRequest.setId(item.getProduct().getId());
+            productRequest.setName(item.getProduct().getName());
+            productRequest.setCategory(item.getProduct().getCategory());
+            productRequest.setPrice(item.getUnitPrice());
+            productRequest.setQuantity(item.getQuantity());
+            productRequests.add(productRequest);
+        }
+        
+        CustomerRequest customerRequest = new CustomerRequest();
+        customerRequest.setLoyaltyLevel(cart.getCustomer().getLoyaltyLevel());
+        
+        CartCalculationRequest request = new CartCalculationRequest();
+        request.setItems(productRequests);
+        request.setCustomer(customerRequest);
+        
+        CartCalculationResponse response = pricingService.calculateCartPricing(request);
+        logger.info("Calculated pricing for cart {}: finalTotal={}", cartId, response.getFinalTotal());
+        
+        return response;
     }
 }

@@ -499,5 +499,140 @@ Content-Type: application/json
 - **Exception Handling**: Comprehensive error handling for all scenarios
 - **Business Logic**: Stock validation, quantity updates, and cart totals working correctly
 
-### Upcoming Sets
-- **Set 3: Pricing Engine APIs** - Not implemented
+---
+
+## Set 3: Dynamic Pricing & Discount APIs ✅
+
+### Pricing Calculation APIs
+
+#### Calculate Cart Pricing (Direct)
+```http
+POST /api/v1/pricing/calculate
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "id": 1,
+      "name": "Laptop",
+      "category": "ELECTRONICS",
+      "price": 1000.00,
+      "quantity": 3
+    }
+  ],
+  "customer": {
+    "loyaltyLevel": "SILVER"
+  }
+}
+```
+**Response:** `200 OK`
+```json
+{
+  "items": [
+    {
+      "id": 1,
+      "name": "Laptop",
+      "category": "ELECTRONICS",
+      "unitPrice": 1000.00,
+      "quantity": 3,
+      "subtotal": 3000.00,
+      "taxRate": 0.10,
+      "taxAmount": 300.00,
+      "totalWithTax": 3300.00,
+      "itemSpecificDiscount": 495.00,
+      "totalAfterItemDiscount": 2805.00
+    }
+  ],
+  "subtotal": 3000.00,
+  "totalTax": 300.00,
+  "totalAfterTax": 3300.00,
+  "itemSpecificDiscounts": 495.00,
+  "totalAfterItemDiscounts": 2805.00,
+  "bulkDiscount": 280.50,
+  "totalAfterBulkDiscount": 2524.50,
+  "customerLoyaltyLevel": "SILVER",
+  "loyaltyDiscount": 252.45,
+  "finalTotal": 2272.05
+}
+```
+
+#### Calculate Cart Pricing (By Cart ID - Pricing Controller)
+```http
+POST /api/v1/pricing/cart/{cartId}/calculate
+Content-Type: application/json
+```
+**Response:** `200 OK` (same format as above) | `404 Not Found` (cart not found) | `400 Bad Request` (empty cart)
+
+#### Calculate Cart Pricing (By Cart ID - Cart Controller)
+```http
+POST /api/v1/cart/{cartId}/calculate
+Content-Type: application/json
+```
+**Response:** `200 OK` (same format as above) | `404 Not Found` (cart not found) | `400 Bad Request` (empty cart)
+
+### Tax Calculation Rules
+- **Electronics**: 10% tax rate
+- **Books**: 0% tax rate (tax-free)
+- **Clothing**: 5% tax rate
+
+### Discount Rules (Applied in Order)
+1. **Item-specific Discounts**: 15% off Electronics when quantity > 2
+2. **Bulk Discounts**: 10% off total when cart value > $200 (after taxes and item-specific discounts)
+3. **Loyalty Discounts**: Applied to final amount after all other discounts
+   - **Bronze**: 5% discount
+   - **Silver**: 10% discount
+   - **Gold**: 15% discount
+
+### Pricing Calculation Flow
+1. Calculate subtotal (unitPrice × quantity per item)
+2. Apply taxes based on product category
+3. Calculate item-specific discounts (Electronics > 2 qty)
+4. Apply bulk discount if cart total > $200
+5. Apply loyalty discount based on customer level
+6. Return final total with complete breakdown
+
+### Response Features
+- **Itemized Breakdown**: Each item shows original price, tax, and discounts
+- **Step-by-Step Calculation**: Shows totals after each discount tier
+- **Tax Details**: Tax rate and amount per item and total
+- **Discount Transparency**: Individual discount amounts clearly shown
+- **Final Total**: Precision to 2 decimal places
+
+### Error Handling
+- **400 Bad Request**: Empty items array, missing customer, invalid loyalty level
+- **404 Not Found**: Cart or product not found
+- **500 Internal Server Error**: Unexpected calculation errors
+
+---
+
+## Testing Status
+
+### Set 1: Foundation APIs ✅
+- **Product Management APIs**: All 7 endpoints tested and working
+- **Customer Management APIs**: All 8 endpoints tested and working
+- **Error Handling**: Proper validation and error responses verified
+- **Database Integration**: H2 database with MyBatis mappers working correctly
+
+### Set 2: Cart Operations APIs ✅
+- **Cart Management APIs**: All 10 endpoints tested and working
+- **Item Management APIs**: Add, update, remove items functionality verified
+- **Exception Handling**: Comprehensive error handling for all scenarios
+- **Business Logic**: Stock validation, quantity updates, and cart totals working correctly
+
+### Set 3: Dynamic Pricing & Discount APIs ✅
+- **Pricing Calculation APIs**: All 3 endpoints tested and working
+- **Tax Calculations**: Category-based tax rates (Electronics 10%, Clothing 5%, Books 0%)
+- **Multi-tier Discounts**: Item-specific, bulk, and loyalty discounts applied correctly
+- **Calculation Accuracy**: Complex discount scenarios validated with precise calculations
+- **Error Handling**: Proper validation for empty carts, missing data, and invalid requests
+- **Integration**: Seamlessly works with existing cart and product data
+
+### Core Features Implemented
+- ✅ **Complete CRUD Operations**: Products, Customers, Carts, Cart Items
+- ✅ **Dynamic Tax Engine**: Product category-based tax calculations
+- ✅ **Multi-tier Discount System**: Item-specific → Bulk → Loyalty discount chain
+- ✅ **Itemized Price Breakdown**: Transparent calculation details in responses
+- ✅ **Stock Management**: Automatic inventory validation and updates
+- ✅ **Data Persistence**: H2/PostgreSQL integration with MyBatis
+- ✅ **Error Handling**: Comprehensive validation and exception management
+- ✅ **API Documentation**: Complete endpoint specifications and examples

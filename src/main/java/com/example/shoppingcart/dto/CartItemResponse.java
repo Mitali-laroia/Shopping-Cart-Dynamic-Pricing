@@ -7,10 +7,12 @@ public class CartItemResponse {
     private Long id;
     private String name;
     private ProductCategory category;
-    private BigDecimal basePrice;
+    private BigDecimal unitPrice;
     private Integer quantity;
     private BigDecimal subtotal;
-    private BigDecimal tax;
+    private BigDecimal taxRate;
+    private BigDecimal taxAmount;
+    private BigDecimal totalWithTax;
     private BigDecimal itemSpecificDiscount;
     private BigDecimal totalAfterItemDiscount;
 
@@ -40,12 +42,12 @@ public class CartItemResponse {
         this.category = category;
     }
 
-    public BigDecimal getBasePrice() {
-        return basePrice;
+    public BigDecimal getUnitPrice() {
+        return unitPrice;
     }
 
-    public void setBasePrice(BigDecimal basePrice) {
-        this.basePrice = basePrice;
+    public void setUnitPrice(BigDecimal unitPrice) {
+        this.unitPrice = unitPrice;
     }
 
     public Integer getQuantity() {
@@ -64,12 +66,28 @@ public class CartItemResponse {
         this.subtotal = subtotal;
     }
 
-    public BigDecimal getTax() {
-        return tax;
+    public BigDecimal getTaxRate() {
+        return taxRate;
     }
 
-    public void setTax(BigDecimal tax) {
-        this.tax = tax;
+    public void setTaxRate(BigDecimal taxRate) {
+        this.taxRate = taxRate;
+    }
+
+    public BigDecimal getTaxAmount() {
+        return taxAmount;
+    }
+
+    public void setTaxAmount(BigDecimal taxAmount) {
+        this.taxAmount = taxAmount;
+    }
+
+    public BigDecimal getTotalWithTax() {
+        return totalWithTax;
+    }
+
+    public void setTotalWithTax(BigDecimal totalWithTax) {
+        this.totalWithTax = totalWithTax;
     }
 
     public BigDecimal getItemSpecificDiscount() {

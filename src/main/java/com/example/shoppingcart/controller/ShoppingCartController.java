@@ -1,6 +1,7 @@
 package com.example.shoppingcart.controller;
 
 import com.example.shoppingcart.dto.AddItemRequest;
+import com.example.shoppingcart.dto.CartCalculationResponse;
 import com.example.shoppingcart.dto.CartResponse;
 import com.example.shoppingcart.dto.CreateCartRequest;
 import com.example.shoppingcart.dto.UpdateItemRequest;
@@ -180,6 +181,26 @@ public class ShoppingCartController {
         } catch (RuntimeException e) {
             logger.warn("Cart not found with id: {}", cartId);
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/{cartId}/calculate")
+    public ResponseEntity<CartCalculationResponse> calculateCartPricing(@PathVariable Long cartId) {
+        logger.debug("POST /api/v1/cart/{}/calculate - Calculate cart pricing with discounts", cartId);
+        try {
+            CartCalculationResponse response = shoppingCartService.calculateCartPricing(cartId);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            if (e.getMessage().contains("not found")) {
+                logger.warn("Cart not found with id: {}", cartId);
+                return ResponseEntity.notFound().build();
+            }
+            if (e.getMessage().contains("empty")) {
+                logger.warn("Cart is empty: {}", cartId);
+                return ResponseEntity.badRequest().build();
+            }
+            logger.error("Error calculating cart pricing for cart {}: {}", cartId, e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
